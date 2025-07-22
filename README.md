@@ -18,6 +18,6 @@ A terminal-based Python application to securely manage and track student attenda
 ## ⚙️ Installation
 
 ```bash
-git clone https://github.com/your-username/Attendance-Register.git
+git clone https://github.com/hackspherix/Attendance-Register.git
 cd Attendance-Register
-python3 main.py
+python3 Register.py
