@@ -5,7 +5,7 @@ A terminal-based Python application to securely manage and track student attenda
 ---
 ## 📸 Screenshot
 
-![App Screenshot](assets/sh1.png)
+<img width="1080" height="2408" alt="Image" src="https://github.com/user-attachments/assets/0e8285ac-28d7-4d07-915c-74ef3fa849e8" />
 
 ## 🚀 Features
 
