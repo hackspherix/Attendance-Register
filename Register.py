@@ -2,16 +2,19 @@ import hashlib
 import getpass
 import datetime
 import os
+from colorama import init, Fore, Style
 
-# Define data containers
+init(autoreset=True)  # Auto-reset styles after each print
+
+# Data containers
 users = {}
 students = {}
 attendance_records = {}
 
-# --- UTILITY FUNCTION ---
+# --- UTILITY ---
 
 def clear_screen():
-    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system("cls" if os.name == "nt" else "clear")
 
 # --- USER MANAGEMENT ---
 
@@ -29,16 +32,18 @@ def load_users():
 
 def register_user():
     clear_screen()
-    username = input("Enter username: ")
+    print(Fore.CYAN + "--- Register User ---")
+    username = input(Fore.YELLOW + "Enter username: ")
     password = getpass.getpass("Enter password: ")
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
     users[username] = hashed_password
     save_users()
-    print("User registered successfully!")
+    print(Fore.GREEN + "User registered successfully!")
 
 def login_user():
     clear_screen()
-    username = input("Enter username: ")
+    print(Fore.CYAN + "--- Login ---")
+    username = input(Fore.YELLOW + "Enter username: ")
     password = getpass.getpass("Enter password: ")
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
     if username in users and users[username] == hashed_password:
@@ -63,23 +68,25 @@ def load_students():
 
 def add_student():
     clear_screen()
-    roll_number = input("Enter roll number: ")
-    name = input("Enter student name: ")
+    print(Fore.CYAN + "--- Add Student ---")
+    roll_number = input(Fore.YELLOW + "Enter roll number: ")
+    name = input(Fore.YELLOW + "Enter student name: ")
     students[roll_number] = name
     attendance_records[roll_number] = []
     save_students()
-    print("Student added successfully!")
+    print(Fore.GREEN + "Student added successfully!")
 
 def view_students():
     clear_screen()
-    print("\nStudent List:")
+    print(Fore.CYAN + "--- Student List ---")
     for roll_number, name in students.items():
-        print(f"Roll no: {roll_number}. name: {name}")
-    print()
+        print(Fore.YELLOW + f"Roll no: {roll_number}, Name: {name}")
+    input(Fore.MAGENTA + "\nPress Enter to return...")
 
 def edit_student():
     clear_screen()
-    roll_number = input("Enter roll number of student to edit: ")
+    print(Fore.CYAN + "--- Edit Student ---")
+    roll_number = input(Fore.YELLOW + "Enter roll number of student to edit: ")
     if roll_number in students:
         print("1. Edit Roll Number")
         print("2. Edit Name")
@@ -89,27 +96,28 @@ def edit_student():
             students[new_roll_number] = students.pop(roll_number)
             attendance_records[new_roll_number] = attendance_records.pop(roll_number)
             save_students()
-            print("Roll number updated successfully!")
+            print(Fore.GREEN + "Roll number updated successfully!")
         elif choice == "2":
             new_name = input("Enter new name: ")
             students[roll_number] = new_name
             save_students()
-            print("Name updated successfully!")
+            print(Fore.GREEN + "Name updated successfully!")
         else:
-            print("Invalid choice.")
+            print(Fore.RED + "Invalid choice.")
     else:
-        print("Student not found.")
+        print(Fore.RED + "Student not found.")
 
 def delete_student():
     clear_screen()
-    roll_number = input("Enter roll number of student to delete: ")
+    print(Fore.CYAN + "--- Delete Student ---")
+    roll_number = input(Fore.YELLOW + "Enter roll number to delete: ")
     if roll_number in students:
         del students[roll_number]
         del attendance_records[roll_number]
         save_students()
-        print("Student deleted successfully!")
+        print(Fore.GREEN + "Student deleted successfully!")
     else:
-        print("Student not found.")
+        print(Fore.RED + "Student not found.")
 
 # --- ATTENDANCE MANAGEMENT ---
 
@@ -117,17 +125,17 @@ def mark_attendance(roll_number):
     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     attendance_records[roll_number].append(current_time)
     save_attendance(roll_number)
-    print(f"Attendance marked for {students[roll_number]} at {current_time}")
+    print(Fore.GREEN + f"Attendance marked for {students[roll_number]} at {current_time}")
 
 def view_attendance(roll_number):
     clear_screen()
     if roll_number in students:
-        print(f"\nAttendance Records for {students[roll_number]}:")
+        print(Fore.CYAN + f"\nAttendance Records for {students[roll_number]}:")
         for idx, record in enumerate(attendance_records[roll_number], start=1):
-            print(f"{idx}. {record}")
-        print()
+            print(Fore.YELLOW + f"{idx}. {record}")
+        input(Fore.MAGENTA + "\nPress Enter to return...")
     else:
-        print("Student not found.")
+        print(Fore.RED + "Student not found.")
 
 def save_attendance(roll_number):
     folder_name = "students"
@@ -150,7 +158,7 @@ def load_attendance(roll_number):
             records = [line.strip() for line in file.readlines()]
     return records
 
-# --- MAIN MENU ---
+# --- MAIN ---
 
 def main():
     load_users()
@@ -158,70 +166,67 @@ def main():
 
     while True:
         clear_screen()
-        print("\n--- Attendance System ---")
-        print("1. Register User")
+        print(Fore.CYAN + Style.BRIGHT + "--- Attendance System ---")
+        print(Fore.YELLOW + "1. Register User")
         print("2. Login User")
         print("3. Exit")
-        choice = input("Enter your choice: ")
+        choice = input(Fore.MAGENTA + "Enter your choice: ")
 
         if choice == "1":
             register_user()
         elif choice == "2":
             if login_user():
-                print("Login successfully!")
+                print(Fore.GREEN + "Login successfully!")
                 while True:
                     clear_screen()
-                    print("\n--- Student Management ---")
-                    print("1. Add Student")
+                    print(Fore.CYAN + "--- Student Management ---")
+                    print(Fore.YELLOW + "1. Add Student")
                     print("2. View Students")
                     print("3. Edit Student")
                     print("4. Delete Student")
                     print("5. Mark Attendance")
                     print("6. View Attendance")
                     print("7. Logout")
-                    choice = input("Enter your choice: ")
+                    choice = input(Fore.MAGENTA + "Enter your choice: ")
 
                     if choice == "1":
                         add_student()
                     elif choice == "2":
                         view_students()
-                        input("Press Enter to return...")
                     elif choice == "3":
                         edit_student()
-                        input("Press Enter to return...")
                     elif choice == "4":
                         delete_student()
-                        input("Press Enter to return...")
                     elif choice == "5":
                         while True:
+                            clear_screen()
                             view_students()
-                            roll_number = input("Enter roll number to mark attendance (or type 'back' to return): ")
+                            roll_number = input(Fore.YELLOW + "\nEnter roll number to mark attendance (or type 'back'): ")
                             if roll_number.lower() == "back":
                                 break
                             if roll_number in students:
                                 mark_attendance(roll_number)
+                                input(Fore.MAGENTA + "\nPress Enter to continue...")
                             else:
-                                print("Student not found.")
-                            input("Press Enter to continue...")
+                                print(Fore.RED + "Student not found.")
                     elif choice == "6":
-                        roll_number = input("Enter roll number to view attendance: ")
+                        roll_number = input(Fore.YELLOW + "Enter roll number to view attendance: ")
                         view_attendance(roll_number)
-                        input("Press Enter to return...")
                     elif choice == "7":
-                        print("Logging out...")
+                        print(Fore.GREEN + "Logging out...")
                         break
                     else:
-                        print("Invalid choice. Please try again.")
-                        input("Press Enter to continue...")
+                        print(Fore.RED + "Invalid choice. Please try again.")
+                        input()
             else:
-                print("Invalid username or password.")
-                input("Press Enter to try again...")
+                print(Fore.RED + "Invalid username or password.")
+                input()
         elif choice == "3":
-            print("Exiting system. Goodbye.")
+            print(Fore.GREEN + "Exiting system. Goodbye.")
             break
         else:
-            print("Invalid choice. Please try again.")
-            input("Press Enter to continue...")
+            print(Fore.RED + "Invalid choice. Please try again.")
+            input()
 
 if __name__ == "__main__":
     main()
