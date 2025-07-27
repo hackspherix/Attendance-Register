@@ -8,6 +8,11 @@ users = {}
 students = {}
 attendance_records = {}
 
+# --- UTILITY FUNCTION ---
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
 # --- USER MANAGEMENT ---
 
 def save_users():
@@ -23,6 +28,7 @@ def load_users():
                 users[username] = hashed_password
 
 def register_user():
+    clear_screen()
     username = input("Enter username: ")
     password = getpass.getpass("Enter password: ")
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
@@ -31,6 +37,7 @@ def register_user():
     print("User registered successfully!")
 
 def login_user():
+    clear_screen()
     username = input("Enter username: ")
     password = getpass.getpass("Enter password: ")
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
@@ -55,6 +62,7 @@ def load_students():
                 attendance_records[roll_number] = load_attendance(roll_number)
 
 def add_student():
+    clear_screen()
     roll_number = input("Enter roll number: ")
     name = input("Enter student name: ")
     students[roll_number] = name
@@ -63,12 +71,14 @@ def add_student():
     print("Student added successfully!")
 
 def view_students():
+    clear_screen()
     print("\nStudent List:")
     for roll_number, name in students.items():
-        print(f"Roll Number: {roll_number}, Name: {name}")
+        print(f"Roll no: {roll_number}. name: {name}")
     print()
 
 def edit_student():
+    clear_screen()
     roll_number = input("Enter roll number of student to edit: ")
     if roll_number in students:
         print("1. Edit Roll Number")
@@ -91,6 +101,7 @@ def edit_student():
         print("Student not found.")
 
 def delete_student():
+    clear_screen()
     roll_number = input("Enter roll number of student to delete: ")
     if roll_number in students:
         del students[roll_number]
@@ -109,6 +120,7 @@ def mark_attendance(roll_number):
     print(f"Attendance marked for {students[roll_number]} at {current_time}")
 
 def view_attendance(roll_number):
+    clear_screen()
     if roll_number in students:
         print(f"\nAttendance Records for {students[roll_number]}:")
         for idx, record in enumerate(attendance_records[roll_number], start=1):
@@ -145,6 +157,7 @@ def main():
     load_students()
 
     while True:
+        clear_screen()
         print("\n--- Attendance System ---")
         print("1. Register User")
         print("2. Login User")
@@ -155,8 +168,9 @@ def main():
             register_user()
         elif choice == "2":
             if login_user():
-                print("Login successful!")
+                print("Login successfully!")
                 while True:
+                    clear_screen()
                     print("\n--- Student Management ---")
                     print("1. Add Student")
                     print("2. View Students")
@@ -171,10 +185,13 @@ def main():
                         add_student()
                     elif choice == "2":
                         view_students()
+                        input("Press Enter to return...")
                     elif choice == "3":
                         edit_student()
+                        input("Press Enter to return...")
                     elif choice == "4":
                         delete_student()
+                        input("Press Enter to return...")
                     elif choice == "5":
                         while True:
                             view_students()
@@ -185,21 +202,26 @@ def main():
                                 mark_attendance(roll_number)
                             else:
                                 print("Student not found.")
+                            input("Press Enter to continue...")
                     elif choice == "6":
                         roll_number = input("Enter roll number to view attendance: ")
                         view_attendance(roll_number)
+                        input("Press Enter to return...")
                     elif choice == "7":
                         print("Logging out...")
                         break
                     else:
                         print("Invalid choice. Please try again.")
+                        input("Press Enter to continue...")
             else:
                 print("Invalid username or password.")
+                input("Press Enter to try again...")
         elif choice == "3":
             print("Exiting system. Goodbye.")
             break
         else:
             print("Invalid choice. Please try again.")
+            input("Press Enter to continue...")
 
 if __name__ == "__main__":
     main()
